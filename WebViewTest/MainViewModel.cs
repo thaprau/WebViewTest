@@ -8,8 +8,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using WebViewTest.HTML;
+using WebViewTest.HTML.Utils;
 
 namespace WebViewTest
 {
@@ -19,7 +21,8 @@ namespace WebViewTest
         public ICommand BtnTestCommand { get; set; }
         public ICommand BtnSaveCommand { get; set; }
 
-        HtmlDocument doc = new HtmlDocument();
+        HtmlDocument doc = new ();
+        HtmlReportGenerator rg = new ();
 
 
 
@@ -82,26 +85,25 @@ namespace WebViewTest
 
         private void WriteReportHtml()
         {
-            var rg = new HtmlReportGenerator();
 
 
             // Example of adding a table
-            DataTable dt  = new DataTable();
+            TableData td  = new();
 
             List<string> row1 = new List<string> { "item1.1", "item1.2" };
             List<string> row2 = new List<string> { "item2.1", "item2.2" };
             List<string> row3 = new List<string> { "item3.1", "item3.2" };
 
-            dt.Columns.Add("test1");
-            dt.Columns.Add("test2");
+
+            td.AddTableRow(row1); 
+            td.AddTableRow(row2); 
+            td.AddTableRow(row3);
 
 
-            dt.Rows.Add(row1);
-            dt.Rows.Add(row2);
-            dt.Rows.Add(row3);
-
-
-            rg.AddTodTable(dt, "Vehicle information");
+            rg.AddHeader();
+            rg.AddTodTable(td, "Vehicle information");
+            rg.AddTodTable(td, "Other information");
+            rg.AddTodTable(td, "Final information");
             rg.Save(URI);
 
 

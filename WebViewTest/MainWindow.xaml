@@ -12,7 +12,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <wpf:WebView2 Source="{Binding URI}"/>
+        <wpf:WebView2 Source="{Binding URI}" x:Name="WebGui"/>
         
         <!--Buttons-->
         <Grid Grid.Row="1">

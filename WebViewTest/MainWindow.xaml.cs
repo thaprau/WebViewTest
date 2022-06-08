@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight.Command;
+using Microsoft.Web.WebView2.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,16 +22,35 @@ namespace WebViewTest
     /// </summary>
     public partial class MainWindow : Window
     {
-        
+        MainViewModel mvm;
 
 
         public MainWindow()
         {
             InitializeComponent();
-            this.DataContext = new MainViewModel();
+            mvm = new MainViewModel();
+            mvm.PropertyChanged += Mvm_PropertyChanged;
+            this.DataContext = mvm;
 
         }
 
+        async private void Mvm_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "URI")
+            {
+                CoreWebView2PrintSettings printSettings = null;
 
+                var WebViewEnvironment = await Microsoft.Web.WebView2.Core.CoreWebView2Environment.CreateAsync().ConfigureAwait(true);
+                printSettings = WebViewEnvironment.CreatePrintSettings();
+                printSettings.ShouldPrintBackgrounds = true;
+
+                string ptdPath = mvm.URI.ToString().Replace("html", "pdf");
+
+                await WebGui.CoreWebView2.PrintToPdfAsync(ptdPath, printSettings: printSettings);
+
+
+                var test = "";
+            }
+        }
     }
 }
