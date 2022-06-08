@@ -2,6 +2,7 @@
 using Microsoft.Web.WebView2.Core;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,15 +29,22 @@ namespace WebViewTest
         public MainWindow()
         {
             InitializeComponent();
+
+
             mvm = new MainViewModel();
             mvm.PropertyChanged += Mvm_PropertyChanged;
             this.DataContext = mvm;
+            File.Delete(mvm.URI);
 
         }
 
         async private void Mvm_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "URI")
+            {
+                WebGui.Reload();
+            }
+            else
             {
                 CoreWebView2PrintSettings printSettings = null;
 

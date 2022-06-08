@@ -21,8 +21,8 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Button Content="Test" Command="{Binding BtnTestCommand}"/>
-            <Button Grid.Column="1" Content="Save" Command="{Binding BtnSaveCommand}"/>
+            <Button Content="Generate Report" Command="{Binding BtnTestCommand}"/>
+            <Button Grid.Column="1" Content="Save to PDF" Command="{Binding BtnSaveCommand}"/>
         </Grid>
     </Grid>
 </Window>

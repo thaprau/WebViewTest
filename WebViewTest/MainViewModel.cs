@@ -15,14 +15,16 @@ using WebViewTest.HTML.Utils;
 
 namespace WebViewTest
 {
-    public class MainViewModel: INotifyPropertyChanged
+    public class MainViewModel : INotifyPropertyChanged
     {
         // Buttons
         public ICommand BtnTestCommand { get; set; }
         public ICommand BtnSaveCommand { get; set; }
 
-        HtmlDocument doc = new ();
-        HtmlReportGenerator rg = new ();
+        HtmlDocument doc = new();
+        HtmlReportGenerator rg = new();
+
+        public bool DoSaveReport { get; set;}
 
 
 
@@ -104,8 +106,10 @@ namespace WebViewTest
             rg.AddTodTable(td, "Vehicle information");
             rg.AddTodTable(td, "Other information");
             rg.AddTodTable(td, "Final information");
-            rg.Save(URI);
 
+            rg.AddLineGraph(null, null);
+            rg.Save(URI);
+            PropertyChanged.Invoke(this, new PropertyChangedEventArgs(nameof(URI)));
 
         }
 
@@ -119,7 +123,7 @@ namespace WebViewTest
 
         private void BtnSaveFunction(object obj)
         {
-            PropertyChanged.Invoke(this, new PropertyChangedEventArgs(nameof(URI)));
+            PropertyChanged.Invoke(this, new PropertyChangedEventArgs(nameof(DoSaveReport)));
         }
 
 

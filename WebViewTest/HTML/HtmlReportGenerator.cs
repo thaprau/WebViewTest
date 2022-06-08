@@ -15,6 +15,7 @@ namespace WebViewTest.HTML
         HtmlDocument doc = new HtmlDocument();
         HtmlNode _htmlNode;
         HtmlNode _bodyNode;
+        HtmlNode _endScriptTag;
 
 
         public HtmlReportGenerator()
@@ -26,6 +27,7 @@ namespace WebViewTest.HTML
         {
             using (StreamWriter writetext = new StreamWriter(path))
             {
+                _htmlNode.AppendChild(_endScriptTag);
                 doc.Save(writetext);
             }
         }
@@ -36,7 +38,16 @@ namespace WebViewTest.HTML
             doc.DocumentNode.AppendChild(_htmlNode);
 
             var headNode = doc.CreateElement("head");
+            headNode.AppendChild(HtmlUtilities.CreateElement(doc, "script", "",
+                new Dictionary<string, string>()
+                {
+                    {"type", "text/javascript" },
+                    {"src", "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js" },
+                }));
+            headNode.AppendChild(HtmlUtilities.CreateElement(doc, "script", "", new Dictionary<string, string>() { {"src", "script.js" } }));
             _htmlNode.AppendChild(headNode);
+            _endScriptTag = HtmlUtilities.CreateElement(doc, "script", "", new Dictionary<string, string>() { { "id" , "last-script" } });
+
 
             // Add style link
             var link = doc.CreateElement("link");
@@ -106,6 +117,20 @@ namespace WebViewTest.HTML
             divTopHeader.AppendChild(HtmlUtilities.CreateElement(doc, "div", "header-item"));
 
             _bodyNode.AppendChild(divTopHeader);
+        }
+
+        public void AddLineGraph(List<double> xData, List<double> yData)
+        {
+            _bodyNode.AppendChild(HtmlUtilities.CreateElement(doc, "canvas", "", new Dictionary<string, string>()
+            {
+                {"id", "myChart" },
+                {"width", "400" },
+                {"height", "400" },
+            }
+            ));
+
+            _endScriptTag.InnerHtml = "generateLineGraph([1, 2, 3, 4], 'Test', 'myChart')";
+
         }
     }
 }
