@@ -14,11 +14,14 @@ namespace WebViewTest.HTML
             return null;
         }
 
-        public static HtmlNode CreateElement(HtmlDocument doc, string type, string cls, Dictionary<string, string> attr = null, string innerHtml = null)
+        public static HtmlNode CreateElement(HtmlDocument doc, string type, string id = null, string cls = null, string innerHtml = null, string onclick = null, Dictionary<string, string> attr = null)
         {
             var node = doc.CreateElement(type);
 
-            node.AddClass(cls);
+            if (id != null) node.Attributes.Add("id", id);
+            if (cls != null) node.Attributes.Add("class", cls);
+            if (innerHtml != null) node.InnerHtml = innerHtml;
+            if (onclick != null) node.Attributes.Add("onclick" ,onclick);
 
             if (attr != null)
             {
@@ -29,7 +32,6 @@ namespace WebViewTest.HTML
 
             }
 
-            if (innerHtml != null) node.InnerHtml = innerHtml;
 
            return node;
         }

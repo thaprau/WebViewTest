@@ -2,8 +2,6 @@ function myFunc(p1, p2) {
     return p1 * p2;
 }
 
-
-
 function generateLineGraph(data_arr, label, elementId) {
     const ctx = document.getElementById(elementId).getContext('2d');
     const data_test = {

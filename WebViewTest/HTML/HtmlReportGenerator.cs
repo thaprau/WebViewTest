@@ -28,6 +28,10 @@ namespace WebViewTest.HTML
             using (StreamWriter writetext = new StreamWriter(path))
             {
                 _htmlNode.AppendChild(_endScriptTag);
+                _htmlNode.AppendChild(HtmlUtilities.CreateElement(doc, "script" ,attr: new Dictionary<string, string>() {
+                    {"type", "text/javascript"},
+                    {"src", "script_contextmenu.js" }
+                }));
                 doc.Save(writetext);
             }
         }
@@ -39,14 +43,16 @@ namespace WebViewTest.HTML
 
             var headNode = doc.CreateElement("head");
             headNode.AppendChild(HtmlUtilities.CreateElement(doc, "script", "",
-                new Dictionary<string, string>()
+                attr: new Dictionary<string, string>()
                 {
                     {"type", "text/javascript" },
                     {"src", "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js" },
                 }));
-            headNode.AppendChild(HtmlUtilities.CreateElement(doc, "script", "", new Dictionary<string, string>() { {"src", "script.js" } }));
+            headNode.AppendChild(HtmlUtilities.CreateElement(doc, "script", "", attr: new Dictionary<string, string>() { {"src", "script.js" } }));
             _htmlNode.AppendChild(headNode);
-            _endScriptTag = HtmlUtilities.CreateElement(doc, "script", "", new Dictionary<string, string>() { { "id" , "last-script" } });
+
+
+            _endScriptTag = HtmlUtilities.CreateElement(doc, "script", "", attr: new Dictionary<string, string>() { { "id" , "last-script" } });
 
 
             // Add style link
@@ -55,11 +61,24 @@ namespace WebViewTest.HTML
             link.Attributes.Add("type", "text/css");
             link.Attributes.Add("href", "style.css");
             link.Attributes.Add("media", "all");
-
             headNode.AppendChild(link);
+
+            var link2 = doc.CreateElement("link");
+            link2.Attributes.Add("rel", "stylesheet");
+            link2.Attributes.Add("type", "text/css");
+            link2.Attributes.Add("href", "style_contextmenu.css");
+            link2.Attributes.Add("media", "all");
+            headNode.AppendChild(link2);
+            
 
             _bodyNode = doc.CreateElement("body");
             _htmlNode.AppendChild(_bodyNode);
+
+            // Add context menu
+            var divContext = HtmlUtilities.CreateElement(doc, "div", id: "context-menu");
+            divContext.AppendChild(HtmlUtilities.CreateElement(doc, "div", id: "context-item-1", cls:"item", onclick: "addRows()", innerHtml:"Add Row"));
+            divContext.AppendChild(HtmlUtilities.CreateElement(doc, "div", id: "context-item-2", cls:"item", onclick: "deleteRows()", innerHtml: "Remove Row"));
+            _bodyNode.AppendChild(divContext);
         }
 
         public void AddTodTable(TableData dataTable, string header = "")
@@ -121,7 +140,7 @@ namespace WebViewTest.HTML
 
         public void AddLineGraph(List<double> xData, List<double> yData)
         {
-            _bodyNode.AppendChild(HtmlUtilities.CreateElement(doc, "canvas", "", new Dictionary<string, string>()
+            _bodyNode.AppendChild(HtmlUtilities.CreateElement(doc, "canvas", "", attr: new Dictionary<string, string>()
             {
                 {"id", "myChart" },
                 {"width", "400" },
